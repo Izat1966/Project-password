@@ -54,7 +54,9 @@ int main() {
         } else if (i == numbersPosition && (answerNumbers == "Y" || answerNumbers == "y")) {
             cout << numbers[rand() % (sizeof(numbers) - 1)];
             numbersIncluded = true;
-        } else {
+        } else 
+        
+        {
             // Fill remaining positions randomly
             int option = rand() % 3;
             if (option == 0 && (answerCapital == "Y" || answerCapital == "y") && !capitalIncluded) {
