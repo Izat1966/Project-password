@@ -7,9 +7,9 @@ Write your code in this editor and press "Run" button to compile and execute it.
 *******************************************************************************/
 
 #include <iostream>
-#include <cstdlib> // to use functions like srand to generate password randomly
+#include <cstdlib> // to randomize password
 #include <string>
-#include <ctime> // to use functions like time to get current time
+#include <ctime> // to get current time and generate different password each time
 using namespace std;
 
 const char low[] = "abcdefghijklmnopqrstuvwxyz";
@@ -23,36 +23,54 @@ int main() {
     cout << "Enter length of the password: ";
     cin >> length;
 
-    int totalLength = length; // to select variables correctly 
-
     cout << "Do you want to add capital letters to your password? (Y/N): ";
     cin >> answerCapital;
-    if (answerCapital == "Y" || answerCapital == "y")
-        totalLength += 26; // to count the quantity of selected varaible correctly
 
     cout << "Do you want to add symbols to your password? (Y/N): ";
     cin >> answerSymbols;
-    if (answerSymbols == "Y" || answerSymbols == "y")
-        totalLength += 13; // to count the quantity of selected varaible correctly
 
     cout << "Do you want to add numbers to your password? (Y/N): ";
     cin >> answerNumbers;
-    if (answerNumbers == "Y" || answerNumbers == "y")
-        totalLength += 10; // to count the quantity of selected varaible correctly
 
     srand(time(0));
+    
+    // To get al options with the same frequency
+    bool capitalIncluded = false, symbolsIncluded = false, numbersIncluded = false;
+    
+    // Randomly select positions for each character type
+    int capitalPosition = rand() % length;
+    int symbolsPosition = rand() % length;
+    int numbersPosition = rand() % length;
+    
     cout << "Generated password: ";
     for (int i = 0; i < length; i++) {
-        int option = rand() % totalLength; // to randomize selected certain varaible
-
-        if (option < length)
-            cout << low[rand() % (sizeof(low) - 1)];
-        else if (option < length + 26 && (answerCapital == "Y" || answerCapital == "y"))
+        // To ne sure that at least one character from each type is included
+        if (i == capitalPosition && (answerCapital == "Y" || answerCapital == "y")) {
             cout << capital[rand() % (sizeof(capital) - 1)];
-        else if (option < length + 39 && (answerSymbols == "Y" || answerSymbols == "y"))
+            capitalIncluded = true;
+        } else if (i == symbolsPosition && (answerSymbols == "Y" || answerSymbols == "y")) {
             cout << symbols[rand() % (sizeof(symbols) - 1)];
-        else if (option < length + 49 && (answerNumbers == "Y" || answerNumbers == "y"))
+            symbolsIncluded = true;
+        } else if (i == numbersPosition && (answerNumbers == "Y" || answerNumbers == "y")) {
             cout << numbers[rand() % (sizeof(numbers) - 1)];
+            numbersIncluded = true;
+        } else {
+            // Fill remaining positions randomly
+            int option = rand() % 3;
+            if (option == 0 && (answerCapital == "Y" || answerCapital == "y") && !capitalIncluded) {
+                cout << capital[rand() % (sizeof(capital) - 1)];
+                capitalIncluded = true;
+            } else if (option == 1 && (answerSymbols == "Y" || answerSymbols == "y") && !symbolsIncluded) {
+                cout << symbols[rand() % (sizeof(symbols) - 1)];
+                symbolsIncluded = true;
+            } else if (option == 2 && (answerNumbers == "Y" || answerNumbers == "y") && !numbersIncluded) {
+                cout << numbers[rand() % (sizeof(numbers) - 1)];
+                numbersIncluded = true;
+            } else {
+                // Fill with lowercase letters if none of the other conditions are met
+                cout << low[rand() % (sizeof(low) - 1)];
+            }
+        }
     }
     return 0;
 }
